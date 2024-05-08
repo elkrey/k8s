@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    io.elkrey.service: mongo
+  name: mongo
+  namespace: chat-socket-challenge-angular-chat-net
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.elkrey.service: mongo
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        io.elkrey.network/chat-socket-challenge-angular-chat-net: "true"
+        io.elkrey.service: mongo
+    spec:
+      containers:
+        - env:
+            - name: MONGO_INITDB_ROOT_PASSWORD
+              value: devpassword
+            - name: MONGO_INITDB_ROOT_USERNAME
+              value: devuser
+            - name: TZ
+              value: America/Bogota
+          image: mongo:4.4
+          #livenessProbe:
+            #exec:
+              #command:
+                #- echo 'db.runCommand("ping").ok' | mongo mongo:27017/test --quiet
+            #failureThreshold: 5
+            #i#nitialDelaySeconds: 20
+            #periodSeconds: 10
+            #timeoutSeconds: 10
+          name: mongo
+          ports:
+            - containerPort: 27017
+              hostPort: 27017
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /data/db
+              name: mongo-claim0
+      hostname: mongo
+      restartPolicy: Always
+      volumes:
+        - name: mongo-claim0
+          persistentVolumeClaim:
+            claimName: mongo-claim0

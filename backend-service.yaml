@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    io.elkrey.service: backend
+  name: backend
+  namespace: chat-socket-challenge-angular-chat-net
+spec:
+  ports:
+    - name: "8080"
+      port: 8080
+      targetPort: 8080
+  selector:
+    io.elkrey.service: backend

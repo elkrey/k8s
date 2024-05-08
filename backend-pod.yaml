@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    io.elkrey.network/chat-socket-challenge-angular-chat-net: "true"
+    io.elkrey.service: backend
+  name: backend
+  namespace: chat-socket-challenge-angular-chat-net
+spec:
+  containers:
+    - env:
+        - name: MONGO_HOST
+          value: mongo
+        - name: MONGO_PASSWORD
+          value: devpassword
+        - name: MONGO_PORT
+          value: "27017"
+        - name: MONGO_USERNAME
+          value: devuser
+        - name: SPRING_PROFILES_ACTIVE
+          value: pdn
+      image: gporras/chat-socket-broker:latest
+      #livenessProbe:
+        #exec:
+          #command:
+            #- curl -m 5 --silent --fail --request GET http://localhost:8080/actuator/health | jq --exit-status -n 'inputs | if has("status") then .status=="UP" else false end' > /dev/null || exit 1
+        #failureThreshold: 10
+        #periodSeconds: 10
+        #timeoutSeconds: 2
+      name: backend
+      ports:
+        - containerPort: 8080
+          hostPort: 8080
+          protocol: TCP
+  restartPolicy: OnFailure

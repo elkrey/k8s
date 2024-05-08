@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    io.elkrey.network/chat-socket-challenge-angular-chat-net: "true"
+    io.elkrey.service: frontend
+  name: frontend
+  namespace: chat-socket-challenge-angular-chat-net
+spec:
+  containers:
+    - env:
+        - name: API_URL
+          value: http://backend.loclahost.com/chat-websocket
+      image: gporras/chat-socket-front:latest
+      name: frontend-chat
+      ports:
+        - containerPort: 80
+          hostPort: 4200
+          protocol: TCP
+  hostname: frontend-chat
+  restartPolicy: OnFailure
